@@ -5,18 +5,17 @@ import zio.http.*
 import zio.http.endpoint.*
 
 object Main extends ZIOAppDefault:
-  val app = ZIO.serviceWithZIO[Greeting]: g =>
-    for
-      r1 <- g.sayHello("World")
-      _  <- Console.printLine(r1)
-      r2 <- g.sayHello("ZIO")
-      _  <- Console.printLine(r2)
-    yield ()
 
   val run =
-    ZIO
-      .scoped(app)
-      .provide(liveLayers)
+    val args = getArgs
+    val zio = for
+      str      <- args.map(_.headOption.getOrElse("dude"))
+      greeting <- ZIO.service[Greeting]
+      res      <- greeting.sayHello(str)
+      _        <- Console.printLine(res)
+    yield ()
+    ZIO.scoped(zio).provideSome[ZIOAppArgs](liveLayers)
+  end run
 
   val urlLayer = ZLayer { ZIO.fromEither(URL.decode("http://localhost:8080")) }
   val locatorLayer = ZLayer {
