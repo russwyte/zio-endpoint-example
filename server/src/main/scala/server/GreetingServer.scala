@@ -21,10 +21,11 @@ case class GreetingServer(greeter: service.Greeting):
   val routes: Routes[Any, Response] =
     Routes(sayHelloRoute) ++ SwaggerUI.routes(
       "docs" / "openapi",
-      endpoints.Greeting.openApi
+      endpoints.Greeting.openApi,
     )
   val app = routes.toHttpApp
   val run = Server.serve(app).provide(Server.default)
+end GreetingServer
 
 object GreetingServer:
   val layer = ZLayer.fromFunction(GreetingServer.apply)

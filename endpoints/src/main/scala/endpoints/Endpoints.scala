@@ -15,5 +15,6 @@ object Greeting:
   val openApi: OpenAPI = OpenAPIGen.fromEndpoints(
     title = "Endpoint Example",
     version = "1.0",
-    Greeting.sayHello
+    Greeting.sayHello,
   )
+end Greeting

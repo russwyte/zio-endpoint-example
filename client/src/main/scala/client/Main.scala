@@ -8,9 +8,9 @@ object Main extends ZIOAppDefault:
   val app = ZIO.serviceWithZIO[Greeting]: g =>
     for
       r1 <- g.sayHello("World")
-      _ <- Console.printLine(r1)
+      _  <- Console.printLine(r1)
       r2 <- g.sayHello("ZIO")
-      _ <- Console.printLine(r2)
+      _  <- Console.printLine(r2)
     yield ()
 
   val run =
@@ -24,9 +24,9 @@ object Main extends ZIOAppDefault:
       ZIO.succeed(EndpointLocator.fromURL(url))
     }
   }
-  val executorLayer = ZLayer.fromFunction {
-    (client: Client, locator: EndpointLocator) =>
-      EndpointExecutor(client, locator, ZIO.unit)
+  val executorLayer = ZLayer.fromFunction { (client: Client, locator: EndpointLocator) =>
+    EndpointExecutor(client, locator, ZIO.unit)
   }
   val liveLayers =
     urlLayer >>> locatorLayer >+> Client.default >>> executorLayer >>> Greeting.layer
+end Main
