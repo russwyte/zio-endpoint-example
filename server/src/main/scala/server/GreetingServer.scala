@@ -24,7 +24,7 @@ case class GreetingServer(greeter: service.Greeting):
     SwaggerUI
       .routes(
         "docs" / "openapi",
-        endpoints.Greeting.openApi,
+        endpoints.openApi,
       )
       .toHttpApp
   val app = coreApp ++ swaggerApp
