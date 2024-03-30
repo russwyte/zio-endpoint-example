@@ -4,26 +4,30 @@ import zio.*
 import zio.http.*
 import zio.http.endpoint.openapi.SwaggerUI
 import zio.http.codec.PathCodec.*
+import zio.json.*
 
 case class GreetingServer(greeter: service.Greeting):
   val sayHelloRoute = endpoints.Greeting.sayHello
-    .implement(Handler.fromFunctionZIO[String] { case (name) =>
+    .implement(Handler.fromFunctionZIO[endpoints.AuthorizedRequest#Greet] { in =>
       val res = for
-        _ <- Console.printLine(s"Received request to greet $name").orDie
+        _ <- Console.printLine(s"Received request to $in").orDie
         name <- ZIO
-          .fromEither(service.model.GreetingName.make(name))
-          .mapError(_ => service.GreetingError.InvalidName)
-          .debug
+          .fromEither(service.model.GreetingName.make(in.name))
+          .mapError(error => service.GreetingError.InvalidName(error))
         g <- greeter.greet(name)
       yield g
-      res.mapError(_.toString())
+      res.mapError(e => endpoints.Error.InvalidName(e.toJsonPretty))
     })
-  val routes: Routes[Any, Response] =
-    Routes(sayHelloRoute) ++ SwaggerUI.routes(
-      "docs" / "openapi",
-      endpoints.Greeting.openApi,
-    )
-  val app = routes.toHttpApp
+  val coreApp =
+    Routes(sayHelloRoute).toHttpApp @@ zio.http.Middleware.customAuth(_.headers.get("api-key").contains("change me"))
+  val swaggerApp =
+    SwaggerUI
+      .routes(
+        "docs" / "openapi",
+        endpoints.Greeting.openApi,
+      )
+      .toHttpApp
+  val app = coreApp ++ swaggerApp
   val run = Server.serve(app).provide(Server.default)
 end GreetingServer
 

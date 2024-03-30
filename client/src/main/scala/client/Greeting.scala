@@ -5,7 +5,7 @@ import zio.http.endpoint.EndpointExecutor
 
 case class Greeting(ex: EndpointExecutor[Unit]):
   def sayHello(name: String) =
-    ex(endpoints.Greeting.sayHello(name))
+    ex(endpoints.Greeting.sayHello(endpoints.AuthorizedRequest("change me").Greet(name)))
 
 object Greeting:
   val layer = ZLayer.fromFunction { Greeting.apply }

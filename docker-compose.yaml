@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  server:
+    build: ./
+    entrypoint: /home/appuser/start
+    ports:
+      - "8080:8080"
+    environment:
+      AWS_REGION: "us-east-1"
+      AWS_ACCESS_KEY_ID: "foobar"
+      AWS_SECRET_ACCESS_KEY: "foobar"
+      USE_LOCALSTACK: "true"
+      LOCALSTACK_HOST: "localstack"
+      LOCALSTACK_PORT: "4566"
+    depends_on:
+      - localstack
+
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      SERVICES: s3
+      DOCKER_HOST: unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh"
+    ports:
+      - 14567:4566
