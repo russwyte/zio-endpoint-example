@@ -1,8 +1,9 @@
 package service.model
 
+import zio.*
+
 import scala.collection.mutable.BitSet
 import scala.util.hashing.MurmurHash3
-import zio.*
 
 case class HashResult(base: Long, seed: Int)
 

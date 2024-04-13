@@ -1,21 +1,14 @@
 package endpoints
 
-import zio.http.endpoint.*
-import zio.http.endpoint.openapi.*
+import zio.http.Method
+import zio.http.Status
 import zio.http.codec.PathCodec.*
-import zio.http.{Method, Status}
-import zio.http.Middleware
-import zio.http.Header.Authorization
-import zio.http.codec.HeaderCodec
-import zio.http.codec.TextCodec
-import zio.prelude.Invariant
-import zio.http.endpoint.openapi.OpenAPI.SecurityScheme.ApiKey.In
-import zio.http.codec.HttpCodec
+import zio.http.endpoint.*
 
 object Greeting:
   val greet = base / "greet"
 
-  val sayHello =
+  val sayHello: Endpoint[String, AuthorizedRequest#Greet, Error | Internal, String, EndpointMiddleware.None.type] =
     Endpoint(Method.GET / greet / "hello" / string("name").example("Good", "Russ").example("Bad", "ru55"))
       .header(apiKey)
       .transformIn { case (name, apiKey) =>

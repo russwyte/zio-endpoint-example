@@ -2,8 +2,8 @@ package server
 
 import zio.*
 import zio.http.*
-import zio.http.endpoint.openapi.SwaggerUI
 import zio.http.codec.PathCodec.*
+import zio.http.endpoint.openapi.SwaggerUI
 import zio.json.*
 
 case class GreetingServer(greeter: service.Greeting):

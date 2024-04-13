@@ -1,7 +1,7 @@
 package service
 
-import zio.schema.*
 import zio.json.*
+import zio.schema.*
 
 enum GreetingError derives JsonCodec, Schema:
   case InvalidName(error: String)

@@ -2,10 +2,6 @@ package server
 
 import zio.*
 import zio.test.*
-import service.Greeting
-import service.model.GreetingName
-import zio.http.Request
-import zio.http.Headers
 
 object GreetingSpec extends ZIOSpecDefault:
   val serverZIO = ZIO.service[GreetingServer]

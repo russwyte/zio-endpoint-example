@@ -3,7 +3,7 @@ val scala3Version = "3.4.1"
 val publishVersion = "0.1.0-SNAPSHOT"
 
 val zioHttpLibs = Seq(
-  "dev.zio" %% "zio-http" % "3.0.0-RC5"
+  "dev.zio" %% "zio-http" % "3.0.0-RC6"
 )
 
 val zioTestLibs = Seq(
@@ -15,8 +15,8 @@ val zioTestLibs = Seq(
 val zioSharedLibs = Seq(
   "dev.zio" %% "zio"                           % "2.1-RC1",
   "dev.zio" %% "zio-json"                      % "0.6.2",
-  "dev.zio" %% "zio-schema"                    % "1.0.1",
-  "dev.zio" %% "zio-schema-derivation"         % "1.0.1",
+  "dev.zio" %% "zio-schema"                    % "1.1.0",
+  "dev.zio" %% "zio-schema-derivation"         % "1.1.0",
   "dev.zio" %% "zio-streams"                   % "2.1-RC1",
   "dev.zio" %% "zio-metrics-connectors"        % "2.3.1", // core library
   "dev.zio" %% "zio-metrics-connectors-statsd" % "2.3.1", // StatsD client
@@ -35,6 +35,12 @@ ThisBuild / resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/c
 ThisBuild / scalaVersion := scala3Version
 ThisBuild / version      := publishVersion
 ThisBuild / testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+ThisBuild / scalacOptions ++= Seq(
+  "-Wunused:all",
+  "-deprecation",
+)
 
 lazy val root = project
   .in(file("."))
