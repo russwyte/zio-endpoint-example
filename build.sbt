@@ -6,20 +6,19 @@ val zioHttpLibs = Seq(
   "dev.zio" %% "zio-http" % "3.0.0-RC6"
 )
 
+val zioVersion = "2.1.0-RC3"
+
 val zioTestLibs = Seq(
-  "dev.zio" %% "zio-test"          % "2.1-RC1" % Test,
-  "dev.zio" %% "zio-test-sbt"      % "2.1-RC1" % Test,
-  "dev.zio" %% "zio-test-magnolia" % "2.1-RC1" % Test,
+  "dev.zio" %% "zio-test"          % zioVersion % Test,
+  "dev.zio" %% "zio-test-sbt"      % zioVersion % Test,
+  "dev.zio" %% "zio-test-magnolia" % zioVersion % Test,
 )
 
 val zioSharedLibs = Seq(
-  "dev.zio" %% "zio"                           % "2.1-RC1",
-  "dev.zio" %% "zio-json"                      % "0.6.2",
-  "dev.zio" %% "zio-schema"                    % "1.1.0",
-  "dev.zio" %% "zio-schema-derivation"         % "1.1.0",
-  "dev.zio" %% "zio-streams"                   % "2.1-RC1",
-  "dev.zio" %% "zio-metrics-connectors"        % "2.3.1", // core library
-  "dev.zio" %% "zio-metrics-connectors-statsd" % "2.3.1", // StatsD client
+  "dev.zio" %% "zio"                   % zioVersion,
+  "dev.zio" %% "zio-json"              % "0.6.2",
+  "dev.zio" %% "zio-schema"            % "1.1.0",
+  "dev.zio" %% "zio-schema-derivation" % "1.1.0",
 )
 
 val neotypeLibs = Seq(

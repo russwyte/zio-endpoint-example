@@ -1,7 +1,5 @@
 package service.model
 
-import zio.*
-
 import scala.collection.mutable.BitSet
 import scala.util.hashing.MurmurHash3
 
@@ -52,9 +50,8 @@ case class BloomFilter private (numberOfBits: Long, numberOfHashes: Int):
     (0 until numberOfHashes).forall: i =>
       val slot = bitPos(i)
       bitSets(slot.bitSetIndex).contains(slot.bitIndex)
-  end contains
 end BloomFilter
-object BloomFilter extends ZIOAppDefault:
+object BloomFilter:
 
   def optimalNumberOfBits(numberOfItems: Long, falsePositiveRate: Double): Long =
     math.ceil(-1 * numberOfItems * math.log(falsePositiveRate) / math.log(2) / math.log(2)).toLong
@@ -66,10 +63,4 @@ object BloomFilter extends ZIOAppDefault:
     val numberOfBits   = optimalNumberOfBits(numberOfItems, falsePositiveRate)
     val numberOfHashes = optimalNumberOfHashes(numberOfItems, numberOfBits)
     BloomFilter(numberOfBits, numberOfHashes)
-  def run =
-    val bf = BloomFilter(1000000000L, 0.0000001)
-    (0 to 100000).foreach(i => bf.add(s"hello$i"))
-    println(bf.contains("hello9999"))
-    println(bf.contains("world"))
-    ZIO.succeed(ExitCode.success)
 end BloomFilter

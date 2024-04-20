@@ -18,18 +18,19 @@ case class GreetingServer(greeter: service.Greeting):
       yield g
       res.mapError(e => endpoints.Error.InvalidName(e.toJsonPretty))
     })
-  val coreApp =
-    Routes(sayHelloRoute).toHttpApp @@ zio.http.Middleware.customAuth(_.headers.get("api-key").contains("change me"))
-  val swaggerApp =
+  val core =
+    Routes(sayHelloRoute)
+  val swagger =
     SwaggerUI
       .routes(
         "docs" / "openapi",
         endpoints.openApi,
       )
-      .toHttpApp
-  val app = coreApp ++ swaggerApp
-  val run = Server.serve(app).provide(Server.default)
+  val all = core @@ zio.http.Middleware.customAuth(_.headers.get("api-key").contains("change me")) ++ swagger
+  val run = Server.serve(all.toHttpApp).provide(Server.default)
 end GreetingServer
 
 object GreetingServer:
   val layer = ZLayer.fromFunction(GreetingServer.apply)
+  val live  = service.GreetingLive.layer >>> layer
+  val run   = ZIO.serviceWithZIO[GreetingServer](_.run).provide(live)
